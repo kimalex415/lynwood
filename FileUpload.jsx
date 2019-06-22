@@ -1,9 +1,29 @@
-import React from "react";
-import { Card, CardBody, CustomInput, InputGroup } from "reactstrap";
-import PropTypes from "prop-types";
 
-// import logger from "../../logger";
-// const _logger = logger.extend("FileUpload");
+uploadFile = loaded => {
+    if (!this.isEmpty(loaded)) {
+      const fd = new FormData();
+      for (let i = 0; i < loaded.length; i++) {
+        fd.append("file", loaded[i], loaded[i].name);
+      }
+      uploadFile(fd)
+        .then(this.onFileUploadSuccess)
+        .then(
+          getAllPaginated(this.state.pageIndex, this.state.pageSize).then(
+            this.onFilesSuccess
+          )
+        )
+
+        .catch(this.onError);
+    } else {
+      swal({
+        title: "Please choose a file",
+        icon: "error",
+        button: "Okay"
+      });
+    }
+  };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 const FileUpload = props => {
   const handlePost = () => {
@@ -31,16 +51,4 @@ const FileUpload = props => {
   );
 };
 
-FileUpload.propTypes = {
-  file: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    fileType: PropTypes.number.isRequired
-  }),
-  currentFile: PropTypes.object,
-  loadFile: PropTypes.func,
-  uploadFile: PropTypes.func
-};
 
-export default FileUpload;
