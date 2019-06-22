@@ -1,0 +1,40 @@
+		@Id INT
+
+AS
+/*
+		DECLARE @Id INT = 19;
+		EXEC dbo.UserProfiles_SelectById_Join @Id;
+*/
+
+BEGIN
+		SELECT 
+				 UP.[Id]
+				,UP.[UserId]
+				,UP.[Bio]
+				,UP.[AvatarUrl]
+				,UP.[Phone]
+				,UP.[RaceEthnicityId]
+				,RE.[Name] AS RaceEthnicityName
+				,UP.[EducationLevelId]
+				,EL.[Name] AS EducationLevelName
+				,UP.[HouseIncome]
+				,UP.[YearsInBusiness]
+				,UP.[DateCreated]
+				,UP.[DateModified]
+				,UP.[FirstName]
+				,UP.[LastName]
+				,UP.[Zip]
+				,U.[Email]
+				
+		FROM 
+				[dbo].[UserProfiles] AS UP
+				INNER JOIN [dbo].[Users] AS U
+				ON UP.UserId = U.Id
+				LEFT JOIN [dbo].[RaceEthnicity] AS RE
+				ON UP.RaceEthnicityId = RE.Id
+				LEFT JOIN [EducationLevel] AS EL
+				ON UP.EducationLevelId = EL.Id
+		WHERE  
+				UP.Id = @Id
+END
+
