@@ -270,4 +270,4 @@ Login.propTypes = {
   currentUser: PropTypes.object,
   location: PropTypes.object
 };
-export default Login;
+export default Login
