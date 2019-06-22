@@ -1,0 +1,89 @@
+ #region Survey Sections
+
+        public int AddSection(SurveySectionsAddRequest model)
+        {
+            int id = 0;
+            _dataProvider.ExecuteNonQuery("dbo.SurveySections_Insert", inputParamMapper: delegate (SqlParameterCollection parm)
+            {
+                SqlParameter retreiveSqlVal = new SqlParameter();
+                retreiveSqlVal.DbType = System.Data.DbType.Int32;
+                retreiveSqlVal.Direction = System.Data.ParameterDirection.Output;
+                retreiveSqlVal.ParameterName = "@Id";
+                parm.Add(retreiveSqlVal);
+                parm.AddWithValue("@SurveyId", model.SurveyId);
+                parm.AddWithValue("@Title", model.Title);
+                parm.AddWithValue("@Description", model.Description);
+                parm.AddWithValue("@SortOrder", model.SortOrder);
+            }, returnParameters: delegate (SqlParameterCollection param)
+            {
+                Int32.TryParse(param["@Id"].Value.ToString(), out id);
+            }
+            );
+            return id;
+        }
+
+        public void UpdateSection(SurveySectionsUpdateRequest model)
+        {
+            _dataProvider.ExecuteNonQuery("dbo.SurveySections_Update", inputParamMapper: delegate (SqlParameterCollection parm)
+            {
+                parm.AddWithValue("@Id", model.Id);
+                parm.AddWithValue("@SurveyId", model.SurveyId);
+                parm.AddWithValue("@Title", model.Title);
+                parm.AddWithValue("@Description", model.Description);
+                parm.AddWithValue("@SortOrder", model.SortOrder);
+            });
+        }
+
+        public SurveySection SelectSectionById(int Id)
+        {
+            SurveySection model = null;
+            _dataProvider.ExecuteCmd("dbo.SurveySections_SelectById", inputParamMapper: delegate (SqlParameterCollection parms)
+            {
+                parms.AddWithValue("@Id", Id);
+            }, singleRecordMapper: delegate (IDataReader reader, short set)
+            {
+                model = Mapper(reader);
+            }
+            );
+            return model;
+        }
+
+        public void DeleteSection(int Id)
+        {
+            _dataProvider.ExecuteNonQuery("dbo.SurveySections_Delete",
+                inputParamMapper: delegate (SqlParameterCollection parms)
+                {
+                    parms.AddWithValue("@Id", Id);
+                });
+        }
+
+        public List<SurveySection> SelectAllSections()
+        {
+            List<SurveySection> surveySectionList = null;
+            _dataProvider.ExecuteCmd("dbo.SurveySections_SelectAll", inputParamMapper: null, singleRecordMapper: delegate (IDataReader reader, short set)
+            {
+
+                SurveySection model = Mapper(reader);
+                if (surveySectionList == null)
+                {
+                    surveySectionList = new List<SurveySection>();
+                }
+                surveySectionList.Add(model);
+
+            });
+            return surveySectionList;
+        }
+
+        private static SurveySection Mapper(IDataReader reader)
+        {
+            SurveySection model = new SurveySection();
+            int startingIndex = 0;
+            model.Id = reader.GetSafeInt32(startingIndex++);
+            model.SurveyId = reader.GetSafeInt32(startingIndex++);
+            model.Title = reader.GetSafeString(startingIndex++);
+            model.Description = reader.GetSafeString(startingIndex++);
+            model.SortOrder = reader.GetSafeInt32(startingIndex++);
+
+            return model;
+        }
+        #endregion
