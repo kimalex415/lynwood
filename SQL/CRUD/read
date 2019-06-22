@@ -1,0 +1,64 @@
+ALTER PROC [dbo].[SurveyAnswers_GetById]
+		@InstanceId INT
+AS 
+/*
+		DECLARE @InstanceId INT = 1
+		EXECUTE SurveyAnswers_GetById
+				@InstanceId
+
+
+		select * from SurveyInstances
+		select * from Surveys
+
+		select * from users	
+		select * from UserProfiles
+
+		select* from surveyquestions
+		select * from SurveyAnswers
+*/
+BEGIN
+		SELECT 
+			si.[Id],
+			si.[SurveyId],
+			si.[UserId],
+			u.[Email],
+			up.[FirstName],
+			up.[LastName],
+			s.[Name] AS SurveyName,
+			s.[Description],
+			s.[StatusId],
+			s.[SurveyTypeId],
+			si.[DateCreated],
+			si.[DateModified]
+		FROM
+			SurveyInstances AS si
+			INNER JOIN
+			Surveys AS s
+			ON
+			si.SurveyId = s.Id
+			INNER JOIN
+			Users AS u
+			ON
+			si.Id = u.Id
+			INNER JOIN
+			UserProfiles AS up
+			ON
+			si.Id = up.UserId
+		WHERE
+			si.Id = @InstanceId
+
+		SELECT 
+			sq.[SortOrder],
+			sq.[Question],
+			sa.[Answer],
+			sa.[InstanceId]
+		FROM 
+			SurveyQuestions AS sq
+			INNER JOIN
+			SurveyAnswers AS sa
+			ON
+			sq.SortOrder = sa.QuestionId
+		WHERE
+			sa.InstanceId = @InstanceId
+END
+
