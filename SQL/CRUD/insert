@@ -1,0 +1,50 @@
+ALTER PROC [dbo].[SurveyAnswers_Insert]
+		@UserId INT
+		,@InstanceId INT
+		,@QuestionId INT
+		,@AnswerOptionId INT = NULL
+		,@Answer NVARCHAR(500) = NULL
+		,@AnswerNumber INT = NULL
+		,@Id INT OUTPUT
+AS
+/*
+		DECLARE    
+				@Id int = 0			
+				,@UserId int = 1
+				,@InstanceId int = 1
+				,@QuestionId int = 2
+				,@AnswerOptionId int = 3
+				,@Answer nvarchar(500)= 'blah'
+				,@AnswerNumber int = 3
+
+		EXEC [dbo].[SurveyAnswers_Insert]
+				@UserId
+				,@InstanceId
+				,@QuestionId
+				,@AnswerOptionId
+				,@Answer
+				,@AnswerNumber
+				,@Id OUTPUT
+
+		SELECT * from [dbo].[SurveyAnswers]
+		Where Id =@Id
+*/
+BEGIN
+		INSERT INTO [dbo].[SurveyAnswers](
+					[UserId]
+				   ,[InstanceId]
+				   ,[QuestionId]
+				   ,[AnswerOptionId]
+				   ,[Answer]
+				   ,[AnswerNumber]
+			)VALUES(
+				   @UserId 
+				   ,@InstanceId
+				   ,@QuestionId
+				   ,@AnswerOptionId
+				   ,@Answer 
+				   ,@AnswerNumber
+			);
+
+	SET @Id=SCOPE_IDENTITY()
+END
