@@ -1,0 +1,83 @@
+#region Survey Sections
+        [HttpPost("sections")]
+        public ActionResult<ItemResponse<int>> AddSection(SurveySectionsAddRequest model)
+        {
+            try
+            {
+
+                int id = _surveyService.AddSection(model);
+                ItemResponse<int> resp = new ItemResponse<int>();
+                resp.Item = id;
+                return Created201(resp);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return StatusCode(500, new ErrorResponse(ex.Message));
+            }
+        }
+
+        [HttpPut("sections/{id:int}")]
+        public ActionResult<SuccessResponse> UpdateSection(int id, SurveySectionsUpdateRequest model)
+        {
+            try
+            {
+                if (id == model.Id)
+                {
+                    _surveyService.UpdateSection(model);
+                    return Ok200(new SuccessResponse());
+                }
+                else
+                {
+                    return NotFound404(new ErrorResponse("Bad Request: Body Id doesn't match"));
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return StatusCode(500, new ErrorResponse(ex.Message));
+            }
+        }
+
+        [HttpDelete("sections/{id:int}")]
+        public ActionResult<SuccessResponse> DeleteSection(int id)
+        {
+            try
+            {
+                _surveyService.DeleteSection(id);
+                return Ok200(new SuccessResponse());
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return StatusCode(500, new ErrorResponse(ex.Message));
+            }
+        }
+
+        [HttpGet("sections")]
+        public ActionResult<ItemsResponse<SurveySection>> SelectAllSections()
+        {
+            try
+            {
+                List<SurveySection> list = _surveyService.SelectAllSections();
+                if (list == null)
+                {
+                    return StatusCode(404, new ErrorResponse("Records Not Found"));
+                }
+                else
+                {
+                    ItemsResponse<SurveySection> resp = new ItemsResponse<SurveySection>();
+                    resp.Items = list;
+                    return Ok200(resp);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return StatusCode(500, new ErrorResponse(ex.Message));
+            }
+
+        }
+        #endregion
