@@ -1,4 +1,4 @@
-  // Submit file using swal 
+  // Submit 
   
   onSuccessSurveySubmit = () => {
     swal({
@@ -15,7 +15,7 @@
   };
 
 
-// Delete file using swal
+// Delete 
 
 deleteFile = id => {
     swal({
