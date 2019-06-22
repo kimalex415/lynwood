@@ -1,0 +1,36 @@
+
+[HttpPost("upload")]
+public async Task<ActionResult<ItemsResponse<string>>> AddFile(IFormFile[] file)
+{
+
+  try
+  {
+      List<string> urls = null;
+      int userId = _authService.GetCurrentUserId();
+      if (file[0] == null)
+      {
+          return NotFound404(new ErrorResponse("No file Submitted"));
+      }
+      else
+      {
+          foreach (var item in file)
+          {
+              if (urls == null)
+              {
+                  urls = new List<string>();
+              }
+              string url = await _fileService.UploadFile(item, userId);
+              urls.Add(url);
+          }
+
+          ItemsResponse<string> resp = new ItemsResponse<string>();
+          resp.Items = urls;
+          return Ok200(resp);
+      }
+  }
+  catch (Exception ex)
+      {
+          Logger.LogError(ex.ToString());
+          return StatusCode(500, new ErrorResponse(ex.Message));
+      }
+}
