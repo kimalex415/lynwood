@@ -1,0 +1,13 @@
+  onSuccessSurveySubmit = () => {
+    swal({
+      title: "Congrats, Survey Submitted!",
+      text: "Let's go see resources that might help...",
+      icon: "success",
+      timer: 2500,
+      button: false
+    }).then(() => {
+      this.props.history.push(`/recommendations`, {
+        id: this.state.surveyInstanceId
+      });
+    });
+  };
