@@ -12,7 +12,6 @@ uploadFile = loaded => {
             this.onFilesSuccess
           )
         )
-
         .catch(this.onError);
     } else {
       swal({
