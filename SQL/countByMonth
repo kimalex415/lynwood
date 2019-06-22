@@ -1,0 +1,19 @@
+ALTER PROC [dbo].[Users_CountByMonth]
+			@Year INT
+
+/*
+		DECLARE @Year INT = 2019
+
+		EXECUTE [dbo].[Users_CountByMonth]
+			@Year
+*/
+AS
+BEGIN
+
+		SELECT MONTH(DateCreated) AS Month,
+		COUNT(DateCreated) AS Count
+		FROM Users
+		WHERE YEAR(DateCreated) = @Year
+		GROUP BY MONTH(DateCreated)
+
+END
