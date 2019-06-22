@@ -1,0 +1,45 @@
+
+ALTER PROC [dbo].[SurveyAnswers_Insert_Multiple]
+		@SurveyAnswersList AS SurveyAnswersListType READONLY
+AS
+/*
+		DECLARE @SurveyAnswersList AS SurveyAnswersListType
+
+		INSERT INTO @surveyAnswersList 
+				(
+					InstanceId,
+					QuestionId,
+					AnswerOptionId,
+					Answer,
+					AnswerNumber
+				)
+		VALUES 
+				(
+					1,
+					1,
+					2,
+					1,
+					'answer',
+					1
+				)
+		SELECT * FROM SurveyAnswers
+		EXECUTE [dbo].[SurveyAnswers_Insert_Multiple] @surveyAnswersList
+		SELECT * FROM SurveyAnswers
+*/
+BEGIN
+		INSERT INTO	[dbo].[SurveyAnswers] 
+			(
+			    [InstanceId]
+			   ,[QuestionId]
+			   ,[AnswerOptionId]
+			   ,[Answer]
+			   ,[AnswerNumber]
+			)
+		SELECT 
+				 InstanceId
+				,QuestionId
+				,AnswerOptionId 
+				,Answer
+				,AnswerNumber
+		FROM @surveyAnswersList
+END
