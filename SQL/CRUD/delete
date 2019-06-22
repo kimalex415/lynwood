@@ -1,0 +1,15 @@
+ALTER PROC [dbo].[SurveyAnswers_DeleteById]
+		@Id INT 
+AS
+/*
+		DECLARE @Id INT = 20;
+		EXEC [dbo].[SurveyAnswers_DeleteById] @Id;
+								
+*/
+BEGIN
+	DELETE 
+	FROM	[dbo].[SurveyAnswers]
+	WHERE
+			Id =@Id
+END
+
