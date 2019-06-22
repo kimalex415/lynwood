@@ -1,0 +1,273 @@
+import React from "react";
+import * as usersService from "../../services/usersService";
+import * as schema from "./schema/UserSchema";
+import { Formik, Field } from "formik";
+import { Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
+import swal from "sweetalert";
+import { getCurrentUser } from "../../services/authService";
+
+// import logger from "../../logger";
+// const _logger = logger.extend("Login");
+class Login extends React.Component {
+  state = {
+    schema: schema.loginSchema,
+    user: {
+      email: "",
+      password: ""
+    },
+    redirect: false
+  };
+
+  getUser = (values, { setSubmitting, resetForm }) => {
+    usersService
+      .loginUser(values)
+      .then(() => {
+        resetForm(this.state.user);
+        setSubmitting(false);
+        swal({
+          title: "Sweet!",
+          text: "You have successfully logged in!",
+          icon: "success",
+          timer: 1100,
+          button: false
+        }).then(() => {
+          getCurrentUser()
+            .then(this.onGetCurrentUserSuccess)
+            .catch(this.onGetCurrentUserError);
+        });
+      })
+      .catch(() => {
+        resetForm(this.state.user);
+        swal({
+          title: "Login Failed!",
+          text: "Please try again!",
+          icon: "error",
+          timer: 800,
+          button: false
+        });
+      });
+  };
+
+  onGetCurrentUserSuccess = data => {
+    if (this.props.location.state) {
+      if (this.props.location.state.statusConfirmed) {
+        if (data.item.roles.includes("Admin")) {
+          this.props.history.push("/admin/dashboard", {
+            type: "LOGIN",
+            payload: data.item
+          });
+        } else if (data.item.roles.includes("Aspiring Entrepreneur")) {
+          this.props.history.push("/admin/users/profiles/new", {
+            type: "LOGIN",
+            payload: data.item
+          });
+        } else if (data.item.roles.includes("Business Owner")) {
+          this.props.history.push("/admin/users/profiles/new", {
+            type: "LOGIN",
+            payload: data.item
+          });
+        } else if (data.item.roles.includes("Resource")) {
+          this.props.history.push("/admin/users/profiles/new", {
+            type: "LOGIN",
+            payload: data.item
+          });
+        }
+      }
+    } else {
+      if (data.item.roles.includes("Admin")) {
+        this.props.history.push("/admin/dashboard", {
+          type: "LOGIN",
+          payload: data.item
+        });
+      } else if (data.item.roles.includes("Aspiring Entrepreneur")) {
+        this.props.history.push("/admin/business/dashboard", {
+          type: "LOGIN",
+          payload: data.item
+        });
+      } else if (data.item.roles.includes("Business Owner")) {
+        this.props.history.push("/admin/business/dashboard", {
+          type: "LOGIN",
+          payload: data.item
+        });
+      } else if (data.item.roles.includes("Resource")) {
+        this.props.history.push("/admin/resource/dashboard", {
+          type: "LOGIN",
+          payload: data.item
+        });
+      }
+    }
+  };
+
+  onGetCurrentUserError = () => {
+    swal({
+      title: "Error!",
+      text: "Server Error",
+      icon: "error",
+      timer: 2000,
+      button: false
+    });
+  };
+
+  setRedirect = () => {
+    this.setState({
+      redirect: true
+    });
+  };
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/register" />;
+    }
+  };
+
+  render() {
+    return (
+      <Formik
+        id="formikForm"
+        enableReinitialize={true}
+        initialValues={this.state.user}
+        validationSchema={this.state.schema}
+        onSubmit={this.getUser}
+      >
+        {props => {
+          const {
+            touched,
+            errors,
+            handleSubmit,
+            isSubmitting,
+            isValid
+          } = props;
+          return (
+            <div className="wrapper">
+              <div className="block-center mt-4 wd-xl">
+                <div className="card card-flat">
+                  <div className="card-header text-center register-card-header">
+                    <em href="/">
+                      <img
+                        className="block-center"
+                        src="img/lynwoodLogo.png"
+                        alt="registerLogo"
+                        style={{ width: "250px", height: "70px" }}
+                      />
+                    </em>
+                  </div>
+                  <div className="card-body">
+                    <p className="text-center py-2">SIGN IN TO CONTINUE.</p>
+                    <form
+                      className="mb-3"
+                      id="registerForm"
+                      onSubmit={handleSubmit}
+                    >
+                      <div className="form-group">
+                        <label
+                          className="text-muted"
+                          labelfor="signupInputEmail1"
+                        >
+                          Email address
+                        </label>
+                        <div className="input-group with-focus">
+                          <Field
+                            name="email"
+                            type="email"
+                            placeholder="Enter email"
+                            className={
+                              (errors.email && touched.email && "error",
+                              "form-control border-right-0")
+                            }
+                          />
+                          <div className="input-group-append">
+                            <span className="input-group-text text-muted bg-transparent border-left-0">
+                              <em className="fa fa-envelope" />
+                            </span>
+                          </div>
+                        </div>
+                        {errors.email && touched.email && (
+                          <div className="input-feedback  text-danger">
+                            {errors.email}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="form-group">
+                        <label
+                          className="text-muted"
+                          labelfor="signupInputPassword1"
+                        >
+                          Password
+                        </label>
+                        <div className="input-group with-focus">
+                          <Field
+                            className={
+                              (errors.password && touched.password && "error",
+                              "form-control border-right-0")
+                            }
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                          />
+                          <div className="input-group-append">
+                            <span className="input-group-text text-muted bg-transparent border-left-0">
+                              <em className="fa fa-lock" />
+                            </span>
+                          </div>
+                        </div>
+                        {errors.password && touched.password && (
+                          <div className="input-feedback text-danger">
+                            {errors.password}
+                          </div>
+                        )}
+                      </div>
+                      <div className="checkbox c-checkbox float-left mt-0">
+                        <label>
+                          <input
+                            type="checkbox"
+                            value=""
+                            name="remember"
+                            data-parsley-multiple="remember"
+                            data-parsley-id="10"
+                          />
+                          <span className="fa fa-check" />
+                          Remember Me
+                        </label>
+                        <br />
+                        <div className="float-right">
+                          <a className="text-muted" href="recover.html">
+                            Forgot your password?
+                          </a>
+                        </div>
+                      </div>
+                      <button
+                        className="btn btn-block btn-primary mt-3"
+                        type="submit"
+                        disabled={isSubmitting || !isValid}
+                      >
+                        Login
+                      </button>
+                    </form>
+                    <p className="pt-3 text-center">Need to Signup?</p>
+                    {this.renderRedirect()}
+                    <button
+                      className="btn btn-block btn-secondary"
+                      type="button"
+                      onClick={this.setRedirect}
+                    >
+                      Register Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }}
+      </Formik>
+    );
+  }
+}
+
+Login.propTypes = {
+  history: PropTypes.any.isRequired,
+  currentUser: PropTypes.object,
+  location: PropTypes.object
+};
+export default Login;
