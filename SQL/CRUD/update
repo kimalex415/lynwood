@@ -1,0 +1,49 @@
+ALTER PROC [dbo].[SurveyAnswers_ Update]
+		@Id INT
+		,@UserId INT
+		,@InstanceId INT
+		,@QuestionId INT
+		,@AnswerOptionId INT
+		,@Answer NVARCHAR(500)
+		,@AnswerNumber INT
+AS
+/*
+		DECLARE
+			@Id int = 2
+			,@UserId int = 3
+			,@InstanceId int = 3
+			,@QuestionId int =3
+			,@AnswerOptionId int = 3
+			,@Answer nvarchar(500) ='blahhah'
+			,@AnswerNumber int = 0
+							  
+
+
+		EXEC [dbo].[SurveyAnswers_ Update]
+			@UserId
+			@InstanceId
+			@QuestionId
+			@AnswerOptionId 
+			@Answer
+			@AnswerNumber
+			@Id
+
+	SELECT * FROM [dbo].[SurveyAnswers] WHERE Id = @Id
+*/
+BEGIN
+
+		DECLARE @DateModified DATETIME2(7) = GETUTCDATE();
+		UPDATE 
+				[dbo].[SurveyAnswers]
+		SET 
+				[UserId] = @UserId
+				,[InstanceId] = @InstanceId
+				,[QuestionId] = @QuestionId
+				,[AnswerOptionId] = @AnswerOptionId 
+				,[Answer] = @Answer
+				,[AnswerNumber] = @AnswerNumber
+				,[DateModified] = @DateModified
+
+		WHERE 
+				Id=@Id
+ END
