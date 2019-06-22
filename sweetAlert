@@ -1,3 +1,5 @@
+  // Submit file using swal 
+  
   onSuccessSurveySubmit = () => {
     swal({
       title: "Congrats, Survey Submitted!",
@@ -9,5 +11,32 @@
       this.props.history.push(`/recommendations`, {
         id: this.state.surveyInstanceId
       });
+    });
+  };
+
+
+// Delete file using swal
+
+deleteFile = id => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    }).then(willDelete => {
+      if (willDelete) {
+        deleteFile(id)
+          .then(() => {
+            this.onDeleteSuccess(id);
+          })
+          .catch(this.onError);
+        swal({
+          title: "Poof! Your file has been deleted!",
+          icon: "success"
+        });
+      } else {
+        swal("Your file is safe!");
+      }
     });
   };
