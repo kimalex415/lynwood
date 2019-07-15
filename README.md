@@ -1,6 +1,6 @@
 # Screen shots
 
-# webiste
+# Webiste
 http://lynwoodcity.azurewebsites.net
 
 # Using Chart.js library
