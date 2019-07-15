@@ -1,5 +1,8 @@
 # Screen shots
 
+# webiste
+http://lynwoodcity.azurewebsites.net/recommendation/details
+
 # Using Chart.js library
 <img width="1267" alt="preview1" src="https://user-images.githubusercontent.com/48972355/60853093-78d3b580-a1af-11e9-9a86-36760033442f.PNG">
 <img width="1101" alt="preview2" src="https://user-images.githubusercontent.com/48972355/60853094-7b360f80-a1af-11e9-9ebc-cc3acc95dff5.PNG">
